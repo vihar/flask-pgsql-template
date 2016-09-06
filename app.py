@@ -1,28 +1,34 @@
-from flask import Flask, render_template, url_for, request, redirect,
-from models import *
-
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/hello'
+
+db = SQLAlchemy(app)
+
+
+class Role(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
+
+    def __init__(self,name,description):
+        self.name = name
+        self.description = description
+
+class Post(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    title = db.Column(db.String(80), unique=True)
+    posttext = db.Column(db.String(255))
+
+    def __init__(self,title,posttext):
+        self.title = title
+        self.posttext = posttext
+
 
 @app.route('/')
 def index():
-	pass
-    #s = Snippet.query.all()
-    #return render_template('index.html', s=s)
+    return "Hello World"
+app = Flask(__name__)
 
-@app.route('/create', methods=['GET','POST'])
-def create_post():
-    pass  
-#if request.method == 'GET':
-#	return render_template('create.html')
-#if request.method == 'POST':
-#	name = request.form['name']
-#	print("I am In")
-#	s = Snippet(name=name)
-#	db.session.add(s)
-#	db.session.commit()
-
-#2\	return redirect(url_for('index'))
-	
-if __name__ == '__main__':
-
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run()
